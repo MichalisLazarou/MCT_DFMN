@@ -5,10 +5,10 @@ import argparse
 import numpy as np
 
 import torch
-from utils.generator.generators_train import miniImageNetGenerator as train_loader
-from utils.generator.generators_test import miniImageNetGenerator as test_loader
+from mini_ImageNet.utils.generator.generators_train import miniImageNetGenerator as train_loader
+from mini_ImageNet.utils.generator.generators_test import miniImageNetGenerator as test_loader
 
-from utils.model import Runner
+from mini_ImageNet.utils.model import Runner
 
 def str2bool(v):
     if isinstance(v, bool):
@@ -20,38 +20,22 @@ def str2bool(v):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--is_train', type=str2bool, default=True,
-                        help='Choice train or test.')
-    parser.add_argument('--n_folder', type=int, default=0,
-                        help='Number of folder.')
-    parser.add_argument('--gpu', type=int, default=0,
-                        help='GPU device number.')
-    parser.add_argument('--backbone', type=str, default='ResNet-12',
-                        help='Choice backbone such as ConvNet-64, ConvNet-128, ConvNet-256 and ResNet-12.')
-    parser.add_argument('--initial_lr', type=float, default=1e-1,
-                        help='Initial learning rate.')
-    parser.add_argument('--first_decay', type=int, default=25000,
-                        help='First decay step.')
-    parser.add_argument('--second_decay', type=int, default=35000,
-                        help='Second decay step.')
+    parser.add_argument('--is_train', type=str2bool, default=True, help='Choice train or test.')
+    parser.add_argument('--n_folder', type=int, default=0, help='Number of folder.')
+    parser.add_argument('--gpu', type=int, default=0, help='GPU device number.')
+    parser.add_argument('--backbone', type=str, default='ResNet-12', help='Choice backbone such as ConvNet-64, ConvNet-128, ConvNet-256 and ResNet-12.')
+    parser.add_argument('--initial_lr', type=float, default=1e-1, help='Initial learning rate.')
+    parser.add_argument('--first_decay', type=int, default=25000, help='First decay step.')
+    parser.add_argument('--second_decay', type=int, default=35000, help='Second decay step.')
+    parser.add_argument('--transductive', type=str2bool, default=True, help='Whether to use transductive training or not.')
+    parser.add_argument('--flip', type=str2bool, default=True, help='Whether to inject data uncertainty.')
+    parser.add_argument('--drop', type=str2bool, default=True, help='Whether to inject model uncertainty.')
 
-    parser.add_argument('--transductive', type=str2bool, default=True,
-                        help='Whether to use transductive training or not.')
-    parser.add_argument('--flip', type=str2bool, default=True,
-                        help='Whether to inject data uncertainty.')
-    parser.add_argument('--drop', type=str2bool, default=True,
-                        help='Whether to inject model uncertainty.')
-
-    parser.add_argument('--n_shot', type=int, default=5,
-                        help='Number of support set per class in train.')
-    parser.add_argument('--n_query', type=int, default=8,
-                        help='Number of queries per class in train.')
-    parser.add_argument('--n_test_query', type=int, default=15,
-                        help='Number of queries per class in test.')
-    parser.add_argument('--n_train_class', type=int, default=15,
-                        help='Number of way for training episode.')
-    parser.add_argument('--n_test_class', type=int, default=5,
-                        help='Number of way for test episode.')
+    parser.add_argument('--n_shot', type=int, default=1, help='Number of support set per class in train.')
+    parser.add_argument('--n_query', type=int, default=8, help='Number of queries per class in train.')
+    parser.add_argument('--n_test_query', type=int, default=15, help='Number of queries per class in test.')
+    parser.add_argument('--n_train_class', type=int, default=15, help='Number of way for training episode.')
+    parser.add_argument('--n_test_class', type=int, default=5, help='Number of way for test episode.')
 
     args = parser.parse_args()
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
@@ -77,7 +61,7 @@ if __name__ == '__main__':
 
     # You can download dataset from https://drive.google.com/file/d/1fJAK5WZTjerW7EWHHQAR9pRJVNg1T1Y7/view
     #data path
-    data_path = '/data/miniImageNet'
+    data_path = '/home/michalislazarou/PhD/few-shot_iterative_graph_cleaning/data_pkl/miniImagenet/'
     train_path = data_path + '/miniImageNet_category_split_train_phase_train.pickle'
     val_path = data_path + '/miniImageNet_category_split_val.pickle'
     test_path = data_path + '/miniImageNet_category_split_test.pickle'
